@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WELCOME TO ZCAS UNIVERSITY REGISTER</title>
+    <title>ZCAS BIOMETRIC ATTENDANCE REGISTER - Login</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
@@ -15,7 +15,7 @@
             background-color: #f4f4f4;
         }
 
-        .registration-form {
+        .login-form {
             text-align: center;
             background-color: #ffffff;
             padding: 20px;
@@ -23,7 +23,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
 
-        .registration-form h1 {
+        .login-form h1 {
             font-size: 24px;
             margin-bottom: 20px;
         }
@@ -38,45 +38,12 @@
     </style>
 </head>
 <body>
-    <div class="registration-form">
-        <h1>ZCAS UNIVERSITY </h1>
-        <img src="/Assets/images/zcas-u-logo.png" alt="Logo" width="100">
-        <p class="text-muted">Registration Form</p>
+    <div class="login-form">
+        <h1>WELCOME TO ZCAS REGISTER</h1>
+        <img src="Assets/images/zcas-u-logo.png" alt="Logo" width="100">
+        <p class="text-muted">Login</p>
 
         <form>
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">
-                            <i class="fa fa-user"></i>
-                        </span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="First Name">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">
-                            <i class="fa fa-user"></i>
-                        </span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="Last Name">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">
-                            <i class="fa fa-id-card"></i>
-                        </span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="Employee No">
-                </div>
-            </div>
-
             <div class="form-group">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -99,8 +66,10 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="submit" class="btn btn-primary">Login</button>
         </form>
+
+        <p class="text-muted mt-3">Don't have an account? <a href="Front/registration.html">Register</a></p>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
