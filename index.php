@@ -1,3 +1,52 @@
+<?php
+session_start();
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["email"]) && 
+isset($_POST["password"])) {
+    // Get the input values from the form
+    $email = $_POST["email"];
+    $password = $_POST["password"];
+
+    // Connect to the database
+    $conn = new mysqli("localhost", "root", "113234adess", "attendance_register");
+
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+   
+    // Prepare and execute the query to fetch user data
+    $stmt = $conn->prepare("SELECT id, email, password, status, verification_token FROM registration WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->bind_result($userId, $dbEmail, $dbPassword, $status, $verificationToken);
+
+
+    if($stmt->fetch()){
+    $stmt->close();
+        // Verify password and check user status
+        if (password_verify($password, $dbPassword)) {
+            if ($status == 'verified' || $status == 'active') {
+                // Authentication successful
+                $_SESSION["user_id"] = $userId;
+                header("Location: Front/auth/register/home.php"); // Redirect to the desired page
+            } else {
+                // Account not active
+                $_SESSION["error_message"] = "Your account is not active.";
+            }
+        } else {
+            // Authentication failed
+            $_SESSION["error_message"] = "Incorrect password. Please try again.";
+        }
+    } else {
+        // Email does not exist in the database
+        $_SESSION["error_message"] = "The email you entered does not exist.";
+    }
+}
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,7 +80,7 @@
         .form-group {
             margin-bottom: 20px;
         }
-
+        
         .form-group input {
             padding: 10px;
         }
@@ -42,34 +91,39 @@
         <h1>WELCOME TO ZCAS REGISTER</h1>
         <img src="Assets/images/zcas-u-logo.png" alt="Logo" width="100">
         <p class="text-muted">Login</p>
-
-        <form>
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">
-                            <i class="fa fa-envelope"></i>
-                        </span>
-                    </div>
-                    <input type="email" class="form-control" placeholder="Email">
-                </div>
+        <form action="index.php" method="POST">
+    <div class="form-group">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fa fa-envelope"></i>
+                </span>
             </div>
+            <input type="email" class="form-control" name="email" placeholder="Email" required>
+        </div>
+    </div>
 
-            <div class="form-group">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">
-                            <i class="fa fa-lock"></i>
-                        </span>
-                    </div>
-                    <input type="password" class="form-control" placeholder="Password">
-                </div>
+    <div class="form-group">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    <i class="fa fa-lock"></i>
+                </span>
             </div>
+            <input type="password" class="form-control" name="password" placeholder="Password" required>
+        </div>
+    </div>
 
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
-
-        <p class="text-muted mt-3">Don't have an account? <a href="Front/registration.html">Register</a></p>
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
+ <p class="text-muted mt-3">Don't have an account? <a href="Front/registration.html">Register</a></p>
+ <?php
+ // Check for error message and display it
+if (isset($_SESSION["error_message"])) {
+    echo '<div class="alert alert-danger">' . $_SESSION["error_message"] . '</div>';
+    unset($_SESSION["error_message"]); // Clear the session variable after displaying it
+}
+ ?>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -77,3 +131,5 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
 </body>
 </html>
+
+
