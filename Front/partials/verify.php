@@ -1,7 +1,7 @@
 <?php
 if (isset($_GET['token'])) {
     $verificationToken = $_GET['token'];
-    
+
     // Connect to the database
     $dbHost = 'localhost';
     $dbUser = 'root';
@@ -35,7 +35,7 @@ if (isset($_GET['token'])) {
                     echo '<div style="font-family: Arial, sans-serif; font-size: 15px; text-align: center;">
                     <p>Verification successful. You can now log in.</p>
                     <a href="http://localhost/Attendance-Register" target="_blank" class="btn btn-primary mt-3" style="color: blue">Go to Login</a>
-                </div>';                                
+                </div>';
                 } else {
                     echo "Error updating status: " . $stmt2->error;
                 }

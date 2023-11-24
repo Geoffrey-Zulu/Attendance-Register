@@ -1,4 +1,5 @@
 USE attendance_register;
+
 CREATE TABLE registration (
     id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(255),
@@ -10,5 +11,3 @@ CREATE TABLE registration (
     verification_token VARCHAR(255),
     registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-

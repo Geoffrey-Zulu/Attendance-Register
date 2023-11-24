@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($status === 'pending') {
             // User with the same email exists and is unverified, send a verification link again
-            $verificationLink = 'You previously started the registration process, follow the link we sent you, or email  <a href="mailto:zulugeoffrey034@gmail.com">admin</a> to start a new registration.';    
+            $verificationLink = 'You previously started the registration process, follow the link we sent you, or email  <a href="mailto:zulugeoffrey034@gmail.com">admin</a> to start a new registration.';
             $mail = new PHPMailer(true);
 
             try {
@@ -118,14 +118,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Close the database connection
     $conn->close();
 }
-?>
-
-
-
-
-
-
-
-
-
-    
