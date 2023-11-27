@@ -32,7 +32,7 @@ if (isset($_GET['token'])) {
             if ($stmt2 = $conn->prepare($updateStatusQuery)) {
                 $stmt2->bind_param("s", $userEmail);
                 if ($stmt2->execute()) {
-                    echo '<div style="font-family: Arial, sans-serif; font-size: 15px; text-align: center;">
+                    echo '<div style="font-family: Arial, sans-serif; font-size: 15px; text-align: center; color: green;">
                     <p>Verification successful. You can now log in.</p>
                     <a href="http://localhost/Attendance-Register" target="_blank" class="btn btn-primary mt-3" style="color: blue">Go to Login</a>
                 </div>';
@@ -44,7 +44,9 @@ if (isset($_GET['token'])) {
                 echo "Error preparing update statement: " . $conn->error;
             }
         } else {
-            echo "Invalid or expired verification link.";
+            echo '<div style="font-family: Arial, sans-serif; font-size: 15px; text-align: center; color:red;">
+            <p>Invalid or expired verification link.</p>
+        </div>';
         }
 
         $stmt->close();
@@ -54,5 +56,7 @@ if (isset($_GET['token'])) {
 
     $conn->close();
 } else {
-    echo "Invalid verification link.";
+    echo '<div style="font-family: Arial, sans-serif; font-size: 15px; text-align: center; color:red;">
+    <p>Invalid verification link.</p>
+</div>';
 }

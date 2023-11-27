@@ -37,9 +37,9 @@
 <body>
 
     <div class="container text-center">
-        <h4 class="mt-5 alert alert-danger">Oops, something went wrong!!</h4>
-        <p>Registration unsuccessful, try again.</p>
-        <a href="./registration.html"">Go to registration</a>
+        <h4 class="mt-5 alert alert-danger">Employee number already in use</h4>
+        <p>Please use a different number!!.</p>
+        <a href="../registration.php" ">Try Again?</a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856g0t0UUGZlEayT6k5OgOzQ0m8eT5c5U0Zt3uOfLAe8hhTc4wW6hF8srzU5" crossorigin="anonymous"></script>

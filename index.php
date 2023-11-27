@@ -45,10 +45,6 @@ if (
     }
 }
 ?>
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -125,7 +121,7 @@ if (
 
             <button type="submit" class="btn btn-primary">Login</button>
         </form>
-        <p class="text-muted mt-3">Don't have an account? <a href="Front/registration.html">Register</a></p>
+        <p class="text-muted mt-3">Don't have an account? <a href="Front/registration.php">Register</a></p>
         <p class="text-muted mt-3">Forgot Password? <a href="Front/reset.php">Reset</a></p>
         <?php
         // Check for error message and display it
