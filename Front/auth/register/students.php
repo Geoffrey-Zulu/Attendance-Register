@@ -82,7 +82,7 @@ if (isset($_SESSION["user_id"]) && !empty($_POST)) { // Check if session variabl
 
     <div class="card dashboard-item mt-4">
         <div class="card-body">
-            <h5 class="card-title">Student List</h5>
+            <h5 class="card-title">Your Student List <?php echo $first_name; ?></h5>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -126,9 +126,9 @@ if (isset($_SESSION["user_id"]) && !empty($_POST)) { // Check if session variabl
                         echo "<td>" . $row['last_name'] . "</td>";
                         echo "<td>" . $row['student_number'] . "</td>";
                         echo "<td>";
-                        echo "<button type='button' class='btn btn-link' data-toggle='modal' data-target='#editModal'>";
-                        echo "<i class='fas fa-pencil-alt'></i>";
-                        echo "</button>";
+                        echo "<button type='button' class='btn btn-link delete-student' data-toggle='modal' data-target='#deleteModal' data-student-number='" . $row['student_number'] . "'>";
+                        echo "<i class='fa-solid fa-trash' style='color: #e7133d;'></i>";
+                        echo "</button>";                        
                         echo "</td>";
                         echo "</tr>";
                     }
@@ -142,15 +142,67 @@ if (isset($_SESSION["user_id"]) && !empty($_POST)) { // Check if session variabl
         </div>
     </div>
 
+    <!-- Modal for confirming student deletion -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete record?'
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 
     <!-- Footer -->
     <?php include 'partials/footer.php'; ?>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script>
-        // JavaScript logic here
-    </script>
+<!-- Add this script at the end of your HTML body -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Handle the click event on the delete button
+        $('.delete-student').on('click', function () {
+            var studentNumber = $(this).data('student-number');
+
+            // Set the student number in the modal for reference
+            $('#deleteModal').data('student-number', studentNumber);
+        });
+
+        // Handle the confirm deletion button click
+        $('#confirmDelete').on('click', function () {
+            // Get the student number from the modal
+            var studentNumber = $('#deleteModal').data('student-number');
+
+            // Make an AJAX request to delete the student
+            $.ajax({
+                type: 'POST',
+                url: 'partials/delete_student.php', // Replace with the actual PHP script for deleting a student
+                data: { studentNumber: studentNumber },
+                success: function (response) {
+                    // Refresh the page after successful deletion
+                    location.reload();
+                },
+                error: function (error) {
+                    console.error('Error deleting student:', error);
+                    // Handle error if needed
+                }
+            });
+        });
+    });
+</script>
 </body>
 
 </html>
