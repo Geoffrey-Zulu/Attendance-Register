@@ -1,5 +1,5 @@
 <?php
-include 'connection.php';
+include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Check if the student number is provided in the POST data

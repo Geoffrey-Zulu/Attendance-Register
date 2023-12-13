@@ -1,11 +1,14 @@
 <?php
-include 'partials/connection.php';
+session_start();
+include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Dashboard</title>
 </head>
+
 <body>
     <!-- header start -->
     <?php include 'partials/header.php'; ?>
@@ -27,7 +30,7 @@ include 'partials/connection.php';
                         <p class="card-text text-muted">
                             click here to add and edit students
                         </p>
-                        <button class="btn btn-primary" onclick="location.href='students.php'">Start</button>
+                        <button class="btn btn-primary" onclick="location.href='student/students.php'">Start</button>
                     </div>
                 </div>
                 <div class="card dashboard-item">
@@ -74,6 +77,7 @@ include 'partials/connection.php';
 
     <!-- Footer start-->
     <?php include 'partials/footer.php'; ?>
-    <!-- footer end -->    
+    <!-- footer end -->
 </body>
+
 </html>

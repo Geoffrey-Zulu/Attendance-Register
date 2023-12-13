@@ -109,7 +109,7 @@ $conn->close();
         </a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item"><a class="nav-link" href="./home.php"><i class="fas fa-home"></i> Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="http://localhost/Attendance-Register/Front/auth/register/home.php"></i> Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-chart-bar"></i> Stats</a></li>
                 <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-book"></i> Exam</a></li>
                 <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-cog"></i> Settings</a></li>
@@ -126,7 +126,7 @@ $conn->close();
                         </div>
                     </a>
                 </li>
-                <li class="nav-item"><a class="nav-link" href="partials/logout.php"><i class="fas fa-sign-out"></i> Log Out</a></li>
+                <li class="nav-item"><a class="nav-link" href="http://localhost/Attendance-Register/Front/auth/register/partials/logout.php"><i class="fas fa-sign-out"></i> Log Out</a></li>
             </ul>
         </div>
     </nav>
