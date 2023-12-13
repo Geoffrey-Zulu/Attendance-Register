@@ -2,7 +2,7 @@
 include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
 // Fetching student data
 $lecturer_id = $_SESSION["user_id"];
-$sql = "SELECT first_name, last_name, student_number FROM students WHERE lecturer_id = ?";
+$sql = "SELECT first_name, last_name, id, student_number FROM students WHERE lecturer_id = ?";
 $select_stmt = $conn->prepare($sql);
 
 if (!$select_stmt) {
@@ -25,13 +25,20 @@ while ($row = $result->fetch_assoc()) {
     echo "<td>" . $row['last_name'] . "</td>";
     echo "<td>" . $row['student_number'] . "</td>";
     echo "<td>";
+
+    // Edit button
+    echo "<button type='button' class='btn btn-link edit-student' data-toggle='modal' data-target='#editModal' data-id='" . $row['id'] . "' data-first-name='" . $row['first_name'] . "' data-last-name='" . $row['last_name'] . "' data-student-number='" . $row['student_number'] . "'>";
+    echo "<i class='fa-solid fa-pencil' style='color: #ffc107;'></i>";
+    echo "</button>";
+
+
+    // Delete button
     echo "<button type='button' class='btn btn-link delete-student' data-toggle='modal' data-target='#deleteModal' data-student-number='" . $row['student_number'] . "'>";
     echo "<i class='fa-solid fa-trash' style='color: #e7133d;'></i>";
     echo "</button>";
     echo "</td>";
     echo "</tr>";
 }
-
 
 $select_stmt->close();
 $conn->close(); // Close the second connection
