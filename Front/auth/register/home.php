@@ -8,6 +8,16 @@ include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
 <head>
     <title>Dashboard</title>
 </head>
+<style>
+/* Add this to your custom CSS or in the head of your HTML file */
+        h4 {
+            text-align: center;
+            margin-top: 50px;
+            color: #A0594A;
+            text-transform: uppercase;
+            /* Adjust the margin as needed */
+        }
+    </style>
 
 <body>
     <!-- header start -->
@@ -17,7 +27,7 @@ include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
     <!-- Main Screen contents start-->
     <div class="container mt-5">
 
-        <h1 class="text-center">Welcome back, <?php echo $first_name; ?></h1>
+        <h4 class="text-center">Welcome back, <?php echo $first_name; ?></h4>
 
         <div class="row">
 
@@ -40,7 +50,7 @@ include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
                         <p class="card-text text-muted">
                             Click here to begin a lecture
                         </p>
-                        <button class="btn btn-primary" onclick="location.href='session.php'">Start</button>
+                        <button class="btn btn-primary" onclick="location.href='session/session.php'">Start</button>
                     </div>
                 </div>
             </div>
@@ -55,7 +65,7 @@ include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
                         <p class="card-text text-muted">
                             Click here to add and edit courses
                         </p>
-                        <button class="btn btn-primary" onclick="location.href='course.php'">Start</button>
+                        <button class="btn btn-primary" onclick="location.href='course/course.php'">Start</button>
                     </div>
                 </div>
                 <div class="card dashboard-item">
@@ -65,7 +75,7 @@ include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
                         <p class="card-text text-muted">
                             Click here to end a semester
                         </p>
-                        <button class="btn btn-primary" onclick="location.href='finalize.php'">Start</button>
+                        <button class="btn btn-primary" onclick="location.href='finalize/finalize.php'">Start</button>
                     </div>
                 </div>
             </div>

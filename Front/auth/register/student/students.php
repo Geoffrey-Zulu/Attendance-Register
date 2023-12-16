@@ -10,11 +10,21 @@ include 'partials/form.php';
         Students
     </title>
     <link rel="stylesheet" href="partials/styles.css">
+    <style>
+        h4.page-header {
+  text-align: center;
+  margin-top: 50px;
+  color: #a0594a;
+  text-transform: uppercase;
+  /* Adjust the margin as needed */
+}
+    </style>
 </head>
 
 <body>
     <!-- header -->
-    <?php include '../partials/header.php'; ?>
+    <?php include 'C:\xampp\htdocs\Attendance-Register\Front\auth\register\partials\header.php'; ?>
+    <h4 class="page-header">Student Management</h4>
     <div id="overlay" class="overlay">
         <div class="lds-facebook">
             <div></div>
@@ -132,7 +142,7 @@ include 'partials/form.php';
 
     <!-- edit modal end -->
     <!-- Footer -->
-    <?php include '../partials/footer.php'; ?>
+    <?php include 'C:\xampp\htdocs\Attendance-Register\Front\auth\register\partials\footer.php'; ?>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <!-- Add this script at the end of your HTML body -->

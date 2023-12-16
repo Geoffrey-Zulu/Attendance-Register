@@ -3,6 +3,14 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.page-header {
+  text-align: center;
+  margin-top: 50px;
+  color: #a0594a;
+  text-transform: uppercase;
+  /* Adjust the margin as needed */
+}
+
 .overlay {
   display: none;
   position: fixed;

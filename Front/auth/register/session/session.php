@@ -1,5 +1,6 @@
 <?php
-include 'partials/connection.php';
+session_start();
+include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -8,26 +9,30 @@ include 'partials/connection.php';
     <title>
         Students
     </title>
-    <!-- <style>
+    <style>
         .dashboard-item:hover {
             transform: none !important;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-    </style> -->
+    </style>
 </head>
 
 <body>
-    <!-- header -->
-    <?php include 'partials/header.php'; ?>
+<?php include 'C:\xampp\htdocs\Attendance-Register\Front\auth\register\partials\header.php'; ?>
+<div class="card dashboard-item">
+    <div class="card-body">
+        <h5 class="card-title">Start Session</h5>
+        <a href="http://localhost/Attendance-Register/Front/auth/register/session/partials/main.php" class="btn btn-primary">
+            Start Session
+        </a>
+    </div>
+</div>
 
 
-    <!-- Footer -->
-    <?php include 'partials/footer.php'; ?>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script>
-        // JavaScript logic here
-    </script>
+<?php include 'C:\xampp\htdocs\Attendance-Register\Front\auth\register\partials\footer.php'; ?>
+<!-- Additional scripts go here -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 
 </html>
