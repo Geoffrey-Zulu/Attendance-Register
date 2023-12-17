@@ -24,14 +24,21 @@ include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
             /* Adjust the margin as needed */
         }
     </style>
+    <link rel="stylesheet" href="http://localhost/Attendance-Register/Front/styles/styles.css">
 </head>
 
 <body>
     <?php
     include 'C:\xampp\htdocs\Attendance-Register\Front\auth\register\partials\header.php';
     ?>
-<h4 class="page-header">Register</h4>
-
+    <h4 class="page-header">Register</h4>
+    <div id="overlay" class="overlay">
+        <div class="lds-facebook">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
     <div class="card dashboard-item">
         <div class="card-body">
             <!-- <h5 class="card-title">Student Attendance for Course: <?php echo $_GET['courseName']; ?></h5> -->
@@ -58,6 +65,16 @@ include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
+    <script>
+        // call the spinner 
+        function spinner() {
+            document.getElementById("overlay").style.display = "block";
+            // set delay
+            setTimeout(function() {
+                window.location.href = "students.php";
+            }, 3000); // 2 seconds delay
+        }
+    </script>
 </body>
 
 </html>

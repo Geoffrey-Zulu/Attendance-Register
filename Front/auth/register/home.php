@@ -75,7 +75,7 @@ include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
                         <p class="card-text text-muted">
                             Click here to end a semester
                         </p>
-                        <button class="btn btn-primary" onclick="location.href='finalize/finalize.php'">Start</button>
+                        <button class="btn btn-primary" onclick="location.href='finalize/finalize.php;' ">Start</button>
                     </div>
                 </div>
             </div>

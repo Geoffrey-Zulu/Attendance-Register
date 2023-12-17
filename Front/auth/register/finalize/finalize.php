@@ -9,6 +9,7 @@ include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
     <title>
         Students
     </title>
+    <link rel="stylesheet" href="http://localhost/Attendance-Register/Front/styles/styles.css">
     <!-- <style>
         .dashboard-item:hover {
             transform: none !important;
@@ -21,26 +22,32 @@ include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
     <?php
     include 'C:\xampp\htdocs\Attendance-Register\Front\auth\register\partials\header.php';
     ?>
-
+    <div id="overlay" class="overlay">
+        <div class="lds-facebook">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
     <div class="container mt-5">
         <!-- Confirmation Box -->
         <div class="container mt-5">
-    <!-- Confirmation Box -->
-    <div class="card mx-auto" style="max-width: 400px;">
-        <div class="card-body">
-            <h5 class="card-title">Confirm Password</h5>
-            <form action="confirm-password.php" method="post">
-                <div class="form-group">
-                    <label for="password">Enter Your Password:</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
+            <!-- Confirmation Box -->
+            <div class="card mx-auto" style="max-width: 400px;">
+                <div class="card-body">
+                    <h5 class="card-title">Confirm Password</h5>
+                    <form action="confirm-password.php" method="post">
+                        <div class="form-group">
+                            <label for="password">Enter Your Password:</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <a href="http://localhost/Attendance-Register/Front/auth/register/finalize/partials/main.php" class="btn btn-primary">
+                            Confirm
+                        </a>
+                    </form>
                 </div>
-                <a href="http://localhost/Attendance-Register/Front/auth/register/finalize/partials/main.php" class="btn btn-primary">
-                    Confirm
-                </a>
-            </form>
+            </div>
         </div>
-    </div>
-</div>
 
 
         <!-- Footer and Scripts -->
@@ -49,7 +56,16 @@ include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
         <!-- Additional scripts go here -->
         <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
+        <script>
+            // call the spinner 
+            function spinner() {
+                document.getElementById("overlay").style.display = "block";
+                // set delay
+                setTimeout(function() {
+                    window.location.href = "students.php";
+                }, 3000); // 2 seconds delay
+            }
+        </script>
 </body>
 
 </html>

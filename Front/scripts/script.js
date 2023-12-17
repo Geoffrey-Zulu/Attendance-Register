@@ -36,3 +36,4 @@ document.getElementById('togglePassword').addEventListener('click', function() {
     var type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
     passwordInput.setAttribute('type', type);
 });
+
