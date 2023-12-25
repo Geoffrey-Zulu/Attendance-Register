@@ -63,6 +63,9 @@ require 'partials/reg_logic.php';
                     <input type="email" class="form-control" name="email" placeholder="Email" required>
                 </div>
             </div>
+
+
+            
             <link rel="stylesheet" href="../index.php">
             <div class="form-group">
                 <div class="input-group">
