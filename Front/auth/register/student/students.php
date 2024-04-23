@@ -1,6 +1,45 @@
 <?php
 session_start();
-include 'partials/form.php';
+include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Check if the necessary data is present
+    if (isset($_POST["firstName"]) && isset($_POST["lastName"]) && isset($_POST["studentNumber"])) {
+        // Get the form data
+        $first_name = $_POST["firstName"];
+        $last_name = $_POST["lastName"];
+        $student_number = $_POST["studentNumber"];
+
+        // Prepare and execute the SQL statement to insert student details
+        $stmt = $conn->prepare("INSERT INTO students (first_name, last_name, student_number) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $first_name, $last_name, $student_number);
+
+        if ($stmt->execute()) {
+            echo "Student details inserted successfully. ";
+        } else {
+            echo "Error: Unable to insert student details. ";
+        }
+    } else {
+        echo "Error: Insufficient data received. ";
+    }
+
+    // Check if fingerprint data is received
+    if (isset($_POST['fingerprint'])) {
+        $fingerprintData = $_POST['fingerprint'];
+
+        // Prepare and execute the SQL statement to insert fingerprint data
+        $stmt = $conn->prepare("UPDATE students SET fingerprint_data = ? WHERE student_number = ?");
+        $stmt->bind_param("ss", $fingerprintData, $student_number);
+
+        if ($stmt->execute()) {
+            echo "Fingerprint data inserted successfully. ";
+        } else {
+            echo "Error: Unable to insert fingerprint data. ";
+        }
+    } else {
+        echo "Fingerprint data not received. ";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,7 +66,7 @@ include 'partials/form.php';
             /* Adjust the margin as needed */
         }
 
-      
+
         .table-container {
             max-height: 400px;
             overflow-y: auto;
@@ -67,9 +106,14 @@ include 'partials/form.php';
                     </div>
                     <div class="form-group col-md-6">
                         <label for="fingerprint">Fingerprint</label>
-                        <input type="text" class="form-control" name="fingerprint" placeholder="Enter fingerprint data">
-                        <!-- icon for fingerprint here -->
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="fingerprint" id="scanningStatus" placeholder="Enter fingerprint data" readonly>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-success" id="scanButton">Scan</button>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
                 <button type="submit" class="btn btn-primary" onclick="spinner()">Add Student</button>
             </form>
@@ -80,22 +124,22 @@ include 'partials/form.php';
         <div class="card-body">
             <h5 class="card-title">Your Student List <?php echo $first_name; ?></h5>
             <div class="table-container">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">First Name</th>
-                        <th scope="col">Last Name</th>
-                        <th scope="col">Student Number</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Student Number</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                    <?php
-                    include 'partials/table.php';
-                    ?>
-                </tbody>
-            </table>
+                        <?php
+                        include 'partials/table.php';
+                        ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -176,6 +220,82 @@ include 'partials/form.php';
     <!-- Add this script at the end of your HTML body -->
     <script src="partials/delete.js"></script>
     <script src="partials/edit.js"></script>
+    <script>
+            // Add event listener for the scan button
+            secugen_lic = ""
+            document.getElementById("scanButton").addEventListener("click", scanFingerprint);
+        async function scanFingerprint() {
+            const uri = "https://localhost:8443/SGIFPCapture"; // Update the URI with the correct endpoint
+
+            try {
+                const response = await fetch(uri, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: new URLSearchParams({
+                        licstr: secugen_lic, // Add your license key here
+                    }),
+                });
+
+                if (response.ok) {
+                    const fpobject = await response.json();
+                    if (fpobject.ErrorCode === 0) {
+                        // Display scanning status as "Scanning..."
+                        document.getElementById("scanningStatus").value = "Scanning...";
+
+                        // Get the fingerprint data
+                        const fingerprintData = fpobject.TemplateBase64;
+                        if (fingerprintData) {
+                            // Send fingerprint data to PHP script using AJAX
+                            sendFingerprintDataToPHP(fingerprintData);
+                        } else {
+                            // Update scanning status to indicate an error
+                            document.getElementById("scanningStatus").value = "Error: Fingerprint data is empty.";
+                        }
+                    } else {
+                        // Handle error
+                        document.getElementById("scanningStatus").value = "Error: Fingerprint Capture Error Code: " + fpobject.ErrorCode;
+                    }
+                } else {
+                    // Handle error
+                    document.getElementById("scanningStatus").value = "Error occurred while capturing fingerprint.";
+                }
+            } catch (error) {
+                // Handle error
+                document.getElementById("scanningStatus").value = "Error occurred while capturing fingerprint: " + error.message;
+            }
+        }
+
+        async function sendFingerprintDataToPHP(fingerprintData) {
+            try {
+                // Log the fingerprint data to verify
+                console.log("Fingerprint data to be sent:", fingerprintData);
+
+                // Send fingerprint data to PHP script using AJAX
+                const response = await fetch('students.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        fingerprint: fingerprintData
+                    })
+                });
+
+                if (response.ok) {
+                    // Fingerprint data sent successfully
+                    document.getElementById("scanningStatus").value = "Scan successful!";
+                } else {
+                    // Handle error
+                    document.getElementById("scanningStatus").value = "Error: Failed to send fingerprint data.";
+                }
+            } catch (error) {
+                // Handle error
+                document.getElementById("scanningStatus").value = "Error occurred while sending fingerprint data: " + error.message;
+            }
+        }
+    </script>
 </body>
 
 </html>
