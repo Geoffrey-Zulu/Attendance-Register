@@ -1,31 +1,44 @@
 <?php
 include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
-if (isset($_SESSION["user_id"]) && !empty($_POST)) { // Check if session variable and POST data are set
-    $lecturer_id = $_SESSION["user_id"]; // Get the logged in lecturer's ID from the session
-    $first_name = $_POST["firstName"]; // Get the first name from the form data
-    $last_name = $_POST["lastName"]; // Get the last name from the form data
-    $student_number = $_POST["studentNumber"]; // Get the student number from the form data
-    $fingerprint_data = $_POST["fingerprint"]; // Get the fingerprint data from the form data
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Check if the necessary data is present
+    if (isset($_POST["firstName"]) && isset($_POST["lastName"]) && isset($_POST["studentNumber"])) {
+        // Get the form data
+        $first_name = $_POST["firstName"];
+        $last_name = $_POST["lastName"];
+        $student_number = $_POST["studentNumber"];
+        $lecturer_id = $_SESSION["user_id"]; 
+        
+        // Prepare and execute the SQL statement to insert student details
+        $stmt = $conn->prepare("INSERT INTO students (first_name, last_name, student_number, lecturer_id) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $first_name, $last_name, $student_number, $lecturer_id);
+        
 
-    // Prepare an SQL statement
-    $stmt = $conn->prepare("INSERT INTO students (first_name, last_name, student_number, fingerprint_data, lecturer_id) VALUES (?, ?, ?, ?, ?)");
-
-    // Bind the form data and the lecturer ID to the SQL statement
-    $stmt->bind_param("ssssi", $first_name, $last_name, $student_number, $fingerprint_data, $lecturer_id);
-
-    $studentNumber = $_POST["studentNumber"];
-    $sql = "SELECT * FROM students WHERE student_number = ?";
-    $select_stmt = $conn->prepare($sql);
-
-    // prevent duplicate entry
-    $select_stmt->bind_param("s", $studentNumber);
-    $select_stmt->execute();
-    $result = $select_stmt->get_result();
-    if ($result->num_rows > 0) {
-        // Student number already exists
-        echo "<div class='alert alert-danger'>Student number already exists. Please use a different number.</div>";
+        if ($stmt->execute()) {
+            $_SESSION["success_message"] = "Student details inserted successfully.";
+        } else {
+            echo "Error: Unable to insert student details. ";
+        }
     } else {
-        // Execute the SQL statement
-        $stmt->execute();
+        echo "Error: Insufficient data received. ";
+    }
+
+    // Check if fingerprint data is received
+    if (isset($_POST['fingerprint'])) {
+        $fingerprintData = $_POST['fingerprint'];
+
+        // Prepare and execute the SQL statement to insert fingerprint data
+        $stmt = $conn->prepare("UPDATE students SET fingerprint_data = ? WHERE student_number = ?");
+        $stmt->bind_param("ss", $fingerprintData, $student_number);
+
+        if ($stmt->execute()) {
+            // echo "Fingerprint data inserted successfully. ";
+        } else {
+            echo "Error: Unable to insert fingerprint data. ";
+        }
+    } else {
+        echo "Fingerprint data not received. ";
     }
 }
+?>
