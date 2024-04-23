@@ -5,7 +5,7 @@ CREATE TABLE students (
   first_name VARCHAR(50) NOT NULL,
   last_name VARCHAR(50) NOT NULL,
   student_number VARCHAR(50) NOT NULL,
-  fingerprint_data VARCHAR(200),
-  lecturer_id INT,
+  fingerprint_data BLOB,
+  lecturer_id VARCHAR(500),
   UNIQUE(student_number)
 );
