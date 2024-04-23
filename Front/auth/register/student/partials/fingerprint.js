@@ -20,7 +20,6 @@ async function scanFingerprint() {
             if (fpobject.ErrorCode === 0) {
                 // "Scanning..."
                 document.getElementById("scanningStatus").value = "Scanning...";
-
                 // Get the fingerprint data
                 const fingerprintData = fpobject.TemplateBase64;
                 if (fingerprintData) {
@@ -62,7 +61,7 @@ async function sendFingerprintDataToPHP(fingerprintData) {
 
         if (response.ok) {
             // Fingerprint data sent successfully
-            document.getElementById("scanningStatus").value = "Scan successful!";
+            document.getElementById("scanningStatus").value =  fingerprintData;  
         } else {
             // Handle error
             document.getElementById("scanningStatus").value = "Error: Failed to send fingerprint data.";
