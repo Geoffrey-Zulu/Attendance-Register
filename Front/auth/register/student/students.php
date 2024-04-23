@@ -9,10 +9,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $first_name = $_POST["firstName"];
         $last_name = $_POST["lastName"];
         $student_number = $_POST["studentNumber"];
-
+        $lecturer_id = $_SESSION["user_id"]; 
+        
         // Prepare and execute the SQL statement to insert student details
-        $stmt = $conn->prepare("INSERT INTO students (first_name, last_name, student_number) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $first_name, $last_name, $student_number);
+        $stmt = $conn->prepare("INSERT INTO students (first_name, last_name, student_number, lecturer_id) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $first_name, $last_name, $student_number, $lecturer_id);
+        
 
         if ($stmt->execute()) {
             echo "Student details inserted successfully. ";
