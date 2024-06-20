@@ -68,12 +68,12 @@ include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
                 </div>
                 <div class="card dashboard-item">
                     <div class="card-body">
-                        <h5 class="card-title">Finalize Semester</h5>
+                        <h5 class="card-title">Reports & charts</h5>
                         <!-- 'Course Duration' content here -->
                         <p class="card-text text-muted">
-                            Click here to end a semester
+                            View course reports
                         </p>
-                        <button class="btn btn-primary" onclick="location.href='finalize/finalize.php;' ">Start</button>
+                        <button class="btn btn-primary" onclick="location.href='reports/charts.php'">Start</button>
                     </div>
                 </div>
             </div>

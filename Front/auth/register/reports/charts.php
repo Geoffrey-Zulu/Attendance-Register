@@ -2,7 +2,7 @@
 session_start();
 include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
 
-// Initialize $selectedDate to avoid undefined variable warning
+// Get the selected date from the GET request or default to today
 $selectedDate = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d');
 
 // Fetch attendance data for the selected date
@@ -23,14 +23,97 @@ while ($row = $result->fetch_assoc()) {
     $attendance_data[] = $row;
 }
 $stmt->close();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Interpretation</title>
+    <title>Attendance Charts</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {
+            'packages': ['corechart', 'bar', 'line']
+        });
+        google.charts.setOnLoadCallback(drawCharts);
+
+        function drawCharts() {
+            drawAttendanceByCourse();
+            drawAttendanceByStudent();
+        }
+
+        function drawAttendanceByCourse() {
+            var data = google.visualization.arrayToDataTable([
+                ['Course', 'Present', 'Absent'],
+                <?php
+                // Process data for chart
+                $course_data = [];
+                foreach ($attendance_data as $entry) {
+                    $course = $entry['course_name'];
+                    $status = $entry['status'];
+                    if (!isset($course_data[$course])) {
+                        $course_data[$course] = ['Present' => 0, 'Absent' => 0];
+                    }
+                    $course_data[$course][$status]++;
+                }
+                foreach ($course_data as $course => $counts) {
+                    echo "['$course', {$counts['Present']}, {$counts['Absent']}],";
+                }
+                ?>
+            ]);
+
+            var options = {
+                title: 'Attendance by Course for <?php echo htmlspecialchars($selectedDate); ?>',
+                hAxis: {
+                    title: 'Course'
+                },
+                vAxis: {
+                    title: 'Count'
+                },
+                bars: 'vertical',
+                isStacked: true
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('attendance_by_course'));
+            chart.draw(data, options);
+        }
+
+        function drawAttendanceByStudent() {
+            var data = google.visualization.arrayToDataTable([
+                ['Student', 'Present', 'Absent'],
+                <?php
+                // Process data for chart
+                $student_data = [];
+                foreach ($attendance_data as $entry) {
+                    $student = $entry['first_name'] . ' ' . $entry['last_name'];
+                    $status = $entry['status'];
+                    if (!isset($student_data[$student])) {
+                        $student_data[$student] = ['Present' => 0, 'Absent' => 0];
+                    }
+                    $student_data[$student][$status]++;
+                }
+                foreach ($student_data as $student => $counts) {
+                    echo "['$student', {$counts['Present']}, {$counts['Absent']}],";
+                }
+                ?>
+            ]);
+
+            var options = {
+                title: 'Attendance by Student for <?php echo htmlspecialchars($selectedDate); ?>',
+                hAxis: {
+                    title: 'Student'
+                },
+                vAxis: {
+                    title: 'Count'
+                },
+                bars: 'vertical',
+                isStacked: true
+            };
+
+            var chart = new google.visualization.BarChart(document.getElementById('attendance_by_student'));
+            chart.draw(data, options);
+        }
+    </script>
     <style>
         .chart-container {
             display: flex;
@@ -47,70 +130,23 @@ $stmt->close();
             text-align: center;
             margin-bottom: 20px;
         }
-
-        .result-box {
-            text-align: center;
-            margin-top: 20px;
-        }
     </style>
 </head>
 
 <body>
+    <?php include 'C:\xampp\htdocs\Attendance-Register\Front\auth\register\partials\header.php'; ?>
     <h2>Attendance Charts</h2>
     <div class="date-selector">
-        <form method="GET" action="charts.php">
+        <form method="GET" action="attendance_charts.php">
             <label for="date">Select Date:</label>
             <input type="date" id="date" name="date" value="<?php echo htmlspecialchars($selectedDate); ?>">
-            <button type="submit">Update Charts</button>
         </form>
     </div>
     <div class="chart-container">
         <div id="attendance_by_course" class="chart-box"></div>
         <div id="attendance_by_student" class="chart-box"></div>
     </div>
-    <div class="result-box">
-        <button id="aiInterpretButton" onclick="interpretData()">AI Interpretation</button>
-        <p id="aiResult"></p>
-    </div>
-
-    <!-- Import the Google AI SDK -->
-    <script type="importmap">
-        {
-        "imports": {
-          "@google/generative-ai": "https://esm.run/@google/generative-ai"
-        }
-      }
-    </script>
-
-    <script type="module">
-        import {
-            GoogleGenerativeAI
-        } from "@google/generative-ai";
-
-        // Fetch your API_KEY
-        const API_KEY = 'YOUR_API_KEY'; // Replace with your actual API key
-
-        // Initialize GoogleGenerativeAI
-        const genAI = new GoogleGenerativeAI(API_KEY);
-        const model = genAI.getGenerativeModel({
-            model: "gemini-1.5-flash-latest"
-        });
-
-        async function interpretData() {
-            const date = document.getElementById('date').value;
-            const data = <?php echo json_encode($attendance_data); ?>;
-            const prompt = `Provide an interpretation for the following attendance data on ${date}: ${JSON.stringify(data)}`;
-
-            try {
-                const result = await model.generateContent(prompt);
-                const response = await result.response;
-                const text = await response.text();
-                document.getElementById('aiResult').innerText = `AI Interpretation: ${text}`;
-            } catch (error) {
-                document.getElementById('aiResult').innerText = `Error: ${error.message}`;
-            }
-        }
-    </script>
+    <?php include 'C:\xampp\htdocs\Attendance-Register\Front\auth\register\partials\footer.php'; ?>
 </body>
 
 </html>

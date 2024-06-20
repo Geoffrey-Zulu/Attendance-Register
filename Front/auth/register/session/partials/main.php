@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['end_session'])) {
 
     $_SESSION["success_message"] = "Session ended and results stored successfully.";
     // Redirect to home page
-    header("Location: /path/to/home/page.php");
+    header("Location: http://localhost/Attendance-Register/Front/auth/register/home.php");
     exit();
 }
 ?>
