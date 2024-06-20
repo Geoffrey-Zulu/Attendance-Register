@@ -2,126 +2,115 @@
 session_start();
 include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
 
-// Check if the course ID is set in the URL
-if (isset($_GET['courseId'])) {
-    $selectedCourseId = $_GET['courseId'];
-
-    // Fetch course name
-    $stmt = $conn->prepare("SELECT course_name FROM courses WHERE course_id = ?");
-    $stmt->bind_param("i", $selectedCourseId);
-    $stmt->execute();
-    $stmt->bind_result($courseName);
-    $stmt->fetch();
-    $stmt->close();
-
-    // Fetch students for the selected course
-    $stmt = $conn->prepare("SELECT cs.course_id, cs.student_id, s.last_name, s.first_name, s.student_number, c.course_name FROM Course_Student cs
-    JOIN students s ON cs.student_id = s.id
-    JOIN courses c ON cs.course_id = c.course_id
-    WHERE cs.course_id = ?");
-    $stmt->bind_param("i", $selectedCourseId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    // Check if there are students available
-    if ($result->num_rows > 0) {
-        $students = $result->fetch_all(MYSQLI_ASSOC);
-    } else {
-        // If no students are available, you can handle this case as needed
-        $students = array();
-    }
-
-    // Close the statement
-    $stmt->close();
-} else {
-    // Handle the case when the course ID is not set
-    echo "Course ID not set.";
-    exit();
+// Fetch students data
+$students = [];
+$stmt = $conn->prepare("SELECT id, first_name, last_name, student_number FROM students");
+$stmt->execute();
+$result = $stmt->get_result();
+while ($row = $result->fetch_assoc()) {
+    $students[] = $row;
 }
-
+$stmt->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <title>Students</title>
+    <title>Fingerprint Verification</title>
     <style>
-        .dashboard-item:hover {
-            transform: none !important;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        .fingerprint-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
         }
-
-        /* Add this to your custom CSS or in the head of your HTML file */
-        h4.page-header {
+        .student-list {
+            width: 80%;
+            margin: 20px auto;
             text-align: center;
-            margin-top: 50px;
-            color: #A0594A;
-            text-transform: uppercase;
-            /* Adjust the margin as needed */
+        }
+        .student-list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .student-list th, .student-list td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        .student-list th {
+            background-color: #f2f2f2;
+            text-align: center;
+        }
+        .hidden {
+            display: none;
+        }
+        .alert {
+            padding: 15px;
+            margin-top: 10px;
+            text-align: center;
+            color: #333;
+            border-radius: 4px;
+        }
+        .alert-success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .alert-danger {
+            background-color: #f2dede;
+            color: #a94442;
         }
     </style>
 </head>
-
 <body>
-    <?php include 'C:\xampp\htdocs\Attendance-Register\Front\auth\register\partials\header.php'; ?>
-    <h4 class="page-header">Register for <?php echo $courseName; ?></h4>
-
-    <div id="overlay" class="overlay">
-        <div class="lds-facebook">
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-    </div>
-
-    <div class="card dashboard-item">
-        <div class="card-body">
-            <!-- Student Table -->
-            <table class="table table-striped">
+    <div class="fingerprint-container">
+        <h3>Fingerprint Verification</h3>
+        <div class="student-list">
+            <h4>Students</h4>
+            <table>
                 <thead>
                     <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Student Number</th>
-                        <th scope="col">Full Name</th>
-                        <th scope="col">Present</th>
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Student Number</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($students as $student) : ?>
+                    <?php foreach ($students as $student): ?>
                         <tr>
-                            <td><?php echo $student['student_id']; ?></td>
-                            <td><?php echo $student['student_number']; ?></td>
-                            <td><?php echo $student['first_name'] . ' ' . $student['last_name']; ?></td>
-                            <td><input type="checkbox" name="present[]" value="<?php echo $student['student_id']; ?>"></td>
+                            <td><?php echo htmlspecialchars($student['id']); ?></td>
+                            <td><?php echo htmlspecialchars($student['first_name']); ?></td>
+                            <td><?php echo htmlspecialchars($student['last_name']); ?></td>
+                            <td><?php echo htmlspecialchars($student['student_number']); ?></td>
+                            <td>
+                                <button onclick="startVerification(<?php echo $student['id']; ?>)">Verify</button>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
-
-            <!-- End Session Button -->
-            <div class="text-center mt-3">
-                <button type="submit" class="btn btn-success" name="end_session">
-                    End Session
-                </button>
-            </div>
-
+        </div>
+        <!-- Hidden images for fingerprint processing -->
+        <img id="FPImage1" class="hidden" alt="Fingerprint Image 1">
+        <img id="FPImage2" class="hidden" alt="Fingerprint Image 2">
+        <div>
+            <input type="hidden" id="studentId">
+        </div>
+        <div>
+            <p id="result"></p>
+            <label for="quality">Match Quality Threshold:</label>
+            <input type="text" id="quality" value="100">
         </div>
     </div>
 
-    <!-- Footer and Scripts -->
-    <?php include 'C:\xampp\htdocs\Attendance-Register\Front\auth\register\partials\footer.php'; ?>
-
+    <script src="fingerprint.js"></script>
     <script>
-        // call the spinner 
-        function spinner() {
-            document.getElementById("overlay").style.display = "block";
-            // set delay
-            setTimeout(function() {
-                window.location.href = "students.php";
-            }, 3000); // 2 seconds delay
+        function startVerification(studentId) {
+            document.getElementById('studentId').value = studentId;
+            document.getElementById('result').innerText = '';
+            // Initiate fingerprint scan
+            CallSGIFPGetData(SuccessFunc1, ErrorFunc);
         }
     </script>
 </body>
-
 </html>

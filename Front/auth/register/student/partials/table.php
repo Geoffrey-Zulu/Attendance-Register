@@ -20,7 +20,7 @@ if (!$select_success) {
 $result = $select_stmt->get_result();
 
 while ($row = $result->fetch_assoc()) {
-    echo "<tr id='studentRow_" . $row['student_number'] . "'>"; // Add an id attribute to each table row
+    echo "<tr id='studentRow_" . $row['student_number'] . "'>"; 
     echo "<td>" . $row['first_name'] . "</td>";
     echo "<td>" . $row['last_name'] . "</td>";
     echo "<td>" . $row['student_number'] . "</td>";

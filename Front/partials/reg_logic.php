@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    $verificationToken = bin2hex(random_bytes(32)); // Generate a verification token
+    $verificationToken = bin2hex(random_bytes(32)); 
 
     // Check if employee number already exists
     $studentNumber = $_POST["employee_no"];

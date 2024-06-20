@@ -9,13 +9,11 @@ include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
     <title>Dashboard</title>
 </head>
 <style>
-/* Add this to your custom CSS or in the head of your HTML file */
         h4 {
             text-align: center;
             margin-top: 50px;
             color: #A0594A;
             text-transform: uppercase;
-            /* Adjust the margin as needed */
         }
     </style>
 

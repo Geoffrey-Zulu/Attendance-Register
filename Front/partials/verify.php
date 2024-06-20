@@ -21,7 +21,7 @@ if (isset($_GET['token'])) {
     if ($stmt = $conn->prepare($checkTokenQuery)) {
         $stmt->bind_param("s", $verificationToken);
         $stmt->execute();
-        $stmt->store_result(); // Store the result for fetching
+        $stmt->store_result(); 
 
         if ($stmt->num_rows > 0) {
             $stmt->bind_result($userEmail);

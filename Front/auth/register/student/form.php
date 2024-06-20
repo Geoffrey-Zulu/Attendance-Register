@@ -1,41 +1,66 @@
 <?php
+session_start();
+include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
+
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Initialize error message
+    $error_message = null;
+
     // Check if the necessary data is present
-    if (isset($_POST["firstName"]) && isset($_POST["lastName"]) && isset($_POST["studentNumber"])) {
+    if (isset($_POST["firstName"], $_POST["lastName"], $_POST["studentNumber"])) {
         // Get the form data
         $first_name = $_POST["firstName"];
         $last_name = $_POST["lastName"];
         $student_number = $_POST["studentNumber"];
+        $lecturer_id = $_SESSION["user_id"] ?? null; // Use null coalescing operator to avoid warnings
 
-        // Prepare and execute the SQL statement to insert student details
-        $stmt = $conn->prepare("INSERT INTO students (first_name, last_name, student_number) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $first_name, $last_name, $student_number);
+        if ($lecturer_id) {
+            // Insert or update student details
+            $stmt = $conn->prepare("INSERT INTO students (first_name, last_name, student_number, lecturer_id) 
+                                    VALUES (?, ?, ?, ?) 
+                                    ON DUPLICATE KEY UPDATE 
+                                        first_name = VALUES(first_name), 
+                                        last_name = VALUES(last_name), 
+                                        lecturer_id = VALUES(lecturer_id)");
+            $stmt->bind_param("ssss", $first_name, $last_name, $student_number, $lecturer_id);
 
-        if ($stmt->execute()) {
-            echo "Student details inserted successfully. ";
+            if ($stmt->execute()) {
+                $_SESSION["success_message"] = "Student details inserted successfully.";
+            } else {
+                $error_message = "Error: Unable to insert student details.";
+            }
+            $stmt->close();
         } else {
-            echo "Error: Unable to insert student details. ";
+            $error_message = "Error: Lecturer ID is not set in the session.";
         }
     } else {
-        echo "Error: Insufficient data received. ";
+        $error_message = "Error: Insufficient data received.";
     }
 
     // Check if fingerprint data is received
     if (isset($_POST['fingerprint'])) {
         $fingerprintData = $_POST['fingerprint'];
 
-        // Prepare and execute the SQL statement to insert fingerprint data
+        // Update the fingerprint data
         $stmt = $conn->prepare("UPDATE students SET fingerprint_data = ? WHERE student_number = ?");
         $stmt->bind_param("ss", $fingerprintData, $student_number);
 
         if ($stmt->execute()) {
-            echo "Fingerprint data inserted successfully. ";
+            // Optional: Add a success message for fingerprint data update if needed
+            // $_SESSION["success_message"] .= " Fingerprint data inserted successfully.";
         } else {
-            echo "Error: Unable to insert fingerprint data. ";
+            $error_message = "Error: Unable to insert fingerprint data.";
         }
-    } else {
-        // echo "Fingerprint data not received. ";
+        $stmt->close();
     }
-}
 
+    if ($error_message) {
+        $_SESSION["error_message"] = $error_message;
+    }
+
+    // Redirect back to the same page to show messages
+    header("Location: students.php");
+    exit();
+}
+?>

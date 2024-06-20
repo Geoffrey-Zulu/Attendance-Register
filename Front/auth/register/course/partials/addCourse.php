@@ -19,7 +19,6 @@ if (isset($_SESSION["user_id"]) && !empty($_POST)) {
     } else {
         // Prepare an SQL statement
         $stmt = $conn->prepare("INSERT INTO courses (course_name, course_code, lecturer_id) VALUES (?, ?, ?)");
-
         // Bind the form data and the lecturer ID to the SQL statement
         $stmt->bind_param("ssi", $course_name, $course_code, $lecturer_id);
 

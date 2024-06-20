@@ -30,7 +30,7 @@ if (
             if ($status == 'verified' || $status == 'active') {
                 // Authentication successful
                 $_SESSION["user_id"] = $userId;
-                header("Location: Front/auth/register/home.php"); // Redirect to the desired page
+                header("Location: Front/auth/register/home.php"); 
             } else {
                 // Account not active
                 $_SESSION["error_message"] = "Your account is not active.";
