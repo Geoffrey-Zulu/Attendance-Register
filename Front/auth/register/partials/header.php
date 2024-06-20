@@ -109,10 +109,10 @@ $conn->close();
         </a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item"><a class="nav-link" href="http://localhost/Attendance-Register/Front/auth/register/home.php"></i> Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-chart-bar"></i> Stats</a></li>
-                <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-book"></i> Exam</a></li>
-                <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                <li class="nav-item"><a class="nav-link" href="http://localhost/Attendance-Register/Front/auth/register/home.php"><i class="fas fa-house"></i> Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="http://localhost/Attendance-Register/Front/auth/register/reports/charts.php"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                <li class="nav-item"><a class="nav-link" href="http://localhost/Attendance-Register/Front/auth/register/course/course.php"><i class="fas fa-book"></i> Course</a></li>
+                <li class="nav-item"><a class="nav-link" href="http://localhost/Attendance-Register/Front/auth/register/session/session.php"><i class="fas fa-address-card"></i> Register</a></li>
             </ul>
 
             <ul class="navbar-nav ml-auto d-flex align-items-center"> <!-- 'ml-auto', 'd-flex', and 'align-items-center' here -->
