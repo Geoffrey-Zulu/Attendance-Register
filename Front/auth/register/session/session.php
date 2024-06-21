@@ -6,11 +6,9 @@ include 'C:\xampp\htdocs\Attendance-Register\Front\partials\connection.php';
 $sql = "SELECT course_id, course_name FROM courses";
 $result = $conn->query($sql);
 
-// Check if there are courses available
 if ($result->num_rows > 0) {
     $courses = $result->fetch_all(MYSQLI_ASSOC);
 } else {
-    // If no courses are available, you can handle this case as needed
     $courses = array();
 }
 

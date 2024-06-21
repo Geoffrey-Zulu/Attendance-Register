@@ -47,8 +47,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_param("ss", $fingerprintData, $student_number);
 
         if ($stmt->execute()) {
-            // Optional: Add a success message for fingerprint data update if needed
-            // $_SESSION["success_message"] .= " Fingerprint data inserted successfully.";
         } else {
             $error_message = "Error: Unable to insert fingerprint data.";
         }
@@ -58,9 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($error_message) {
         $_SESSION["error_message"] = $error_message;
     }
-
-    // Redirect back to the same page to show messages
-    header("Location: students.php");
+    header("Location: http://localhost/Attendance-Register/Front/auth/register/home.php");
     exit();
 }
 ?>

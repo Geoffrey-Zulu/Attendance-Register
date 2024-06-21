@@ -15,7 +15,7 @@ if (isset($_GET['courseId'])) {
     $stmt->close();
 
     // Fetch students for the selected course
-    $stmt = $conn->prepare("SELECT cs.course_id, cs.student_id, s.last_name, s.first_name, s.student_number, c.course_name 
+    $stmt = $conn->prepare("SELECT cs.course_id, cs.student_id, s.last_name, s.first_name, s.student_number, s.fingerprint_data 
                             FROM Course_Student cs
                             JOIN students s ON cs.student_id = s.id
                             JOIN courses c ON cs.course_id = c.course_id
@@ -35,7 +35,7 @@ if (isset($_GET['courseId'])) {
 }
 
 // Handle session ending and storing results
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['end_session'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['attendance'])) {
     $attendance = json_decode($_POST['attendance'], true);
 
     foreach ($attendance as $studentId => $status) {
@@ -131,7 +131,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['end_session'])) {
                                 <td><?php echo htmlspecialchars($student['student_number']); ?></td>
                                 <td id="status-<?php echo $student['student_id']; ?>">Not Verified</td>
                                 <td>
-                                    <button type="button"  class="btn btn-success" onclick="startVerification(<?php echo $student['student_id']; ?>)">Verify</button>
+                                    <button type="button" class="btn btn-success" onclick="startVerification(<?php echo $student['student_id']; ?>)">Verify</button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -149,7 +149,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['end_session'])) {
         <input type="hidden" id="studentId">
     </div>
 
-    <?php include 'C:\xampp\htdocs\Attendance-Register\Front\auth\register\partials\footer.php'; ?>
     <script src="fingerprint.js"></script>
     <script>
         function startVerification(studentId) {
@@ -208,8 +207,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['end_session'])) {
                 if (result.MatchingScore >= idQuality) {
                     document.getElementById('status-' + studentId).innerText = "Verified ✔";
                     document.getElementById('status-' + studentId).style.color = "green";
+                    updateAttendance(studentId, 'Present');
                 } else {
                     document.getElementById('status-' + studentId).innerText = "Not Verified";
+                    updateAttendance(studentId, 'Absent');
                 }
             } else {
                 alert("Error Matching Fingerprints: " + result.ErrorCode);
@@ -217,51 +218,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['end_session'])) {
         }
 
         function failureFunc(error) {
-    alert("On Match Process, failure has been called. Error: " + error);
-}
-
-function SuccessFunc1(result) {
-    if (result.ErrorCode == 0) {
-        template_1 = result.TemplateBase64;
-        matchScore(succMatch, failureFunc);
-    } else {
-        alert("Fingerprint Capture Error Code: " + result.ErrorCode);
-    }
-}
-
-function ErrorFunc(status) {
-    alert("Check if SGIBIOSRV is running; status = " + status + ":");
-}
-
-async function CallSGIFPGetData(successCall, failCall) {
-    const uri = "https://localhost:8443/SGIFPCapture";
-    const xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            const fpobject = JSON.parse(xmlhttp.responseText);
-            successCall(fpobject);
-        } else if (xmlhttp.status == 404) {
-            failCall(xmlhttp.status);
+            alert("On Match Process, failure has been called");
         }
-    };
-    xmlhttp.onerror = function () {
-        failCall(xmlhttp.status);
-    };
-    const params = "Timeout=" + "10000" + "&Quality=" + "50" + "&licstr=" + encodeURIComponent(secugen_lic) + "&templateFormat=" + "ISO";
-    xmlhttp.open("POST", uri, true);
-    xmlhttp.send(params);
-}
 
-function endSession() {
-    const attendance = {};
-    document.querySelectorAll('[id^=status-]').forEach(function (element) {
-        const studentId = element.id.split('-')[1];
-        attendance[studentId] = element.innerText === 'Verified ✔' ? 'Present' : 'Absent';
-    });
-    document.getElementById('attendanceData').value = JSON.stringify(attendance);
-    document.getElementById('attendanceForm').submit();
-}
-</script>
+        function updateAttendance(studentId, status) {
+            const attendance = JSON.parse(document.getElementById('attendanceData').value || "{}");
+            attendance[studentId] = status;
+            document.getElementById('attendanceData').value = JSON.stringify(attendance);
+        }
+    </script>
 </body>
 </html>
-

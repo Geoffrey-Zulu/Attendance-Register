@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Make an AJAX request to delete the student
     $.ajax({
       type: "POST",
-      url: "partials/delete_student.php", // Adjust the path to your delete script
+      url: "partials/delete_student.php", 
       data: {
         studentNumber: studentNumber,
       },
